@@ -56,13 +56,12 @@ l = 0.129  # m mitad del largo del pendulo, distancia del extremo al centro de m
 # Condiciones iniciales
 Ts = 0.002  # segundos
 T = 10  # Tiempo de simulacion
-X0 = [0.0, 0.0, 0.0, 0.0]  # [theta, theta_dot, phi, phi_dot]
+X0 = [np.deg2rad(45), 0.0, np.deg2rad(90), 0.0]  # [theta, theta_dot, phi, phi_dot]
 t = np.arange(0, T + Ts, Ts)  # vector de tiempo (inicio, fin, paso)
 tau = 0.0  # torque constante aplicado al brazo rotatorio
 
 sol = odeint(model, X0, t, args=(tau,))  # resolver ODE
-# print(sol)
-print(sol.shape)
+# print(sol.shape)
 # Ahora graficamos los resultados
 fig, ax = plt.subplots(2, 1, figsize=(8, 6))
 ax[0].plot(t, sol[:, 0], "b", label="theta (rad)")
@@ -84,8 +83,8 @@ plt.show()
 
 # Animacion del sistema
 fig2, ax2 = plt.subplots(figsize=(6, 6))
-ax2.set_xlim(-0.3, 0.3)
-ax2.set_ylim(-0.3, 0.3)
+ax2.set_xlim(-(r + 0.3), r + 0.3)
+ax2.set_ylim(-(r + 0.3), r + 0.3)
 ax2.set_aspect("equal")
 ax2.grid()
 (brazo_line,) = ax2.plot([], [], "o-", lw=4, color="blue", label="Brazo")
@@ -120,6 +119,6 @@ def animate(i):
 
 
 ani = animation.FuncAnimation(
-    fig2, animate, init_func=init, frames=len(indices), interval=20, blit=True
+    fig2, animate, init_func=init, frames=len(indices), interval=30, blit=True
 )
 plt.show()
