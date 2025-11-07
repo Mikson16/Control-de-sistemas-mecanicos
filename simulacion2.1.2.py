@@ -15,7 +15,7 @@ def model(X, t, tau):
     m_p = 0.024  # Kg Masa del pendulo
     l = 0.129  # m mitad del largo del pendulo, distancia del extremo al centro de masa
     j_p = 1.331e-4  # Kg.m^2 Inercia del pendulo
-    g = 9.81  # m/s^2 Aceleracion de la gravedad
+    g = -9.81  # m/s^2 Aceleracion de la gravedad
 
     # Ecuaciones dinamicas
     v = (
@@ -56,9 +56,9 @@ l = 0.129  # m mitad del largo del pendulo, distancia del extremo al centro de m
 # Condiciones iniciales
 Ts = 0.002  # segundos
 T = 10  # Tiempo de simulacion
-X0 = [np.deg2rad(45), 0.0, np.deg2rad(90), 0.0]  # [theta, theta_dot, phi, phi_dot]
+X0 = [np.deg2rad(30), 0.0, 0.0, 0.0]  # [theta, theta_dot, phi, phi_dot]
 t = np.arange(0, T + Ts, Ts)  # vector de tiempo (inicio, fin, paso)
-tau = 0.0  # torque constante aplicado al brazo rotatorio
+tau = 0.001  # torque constante aplicado al brazo rotatorio
 
 sol = odeint(model, X0, t, args=(tau,))  # resolver ODE
 # print(sol.shape)
