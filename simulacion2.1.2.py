@@ -14,7 +14,7 @@ def model(X, t, tau):
     j_a = 2.288e-4  # Kg.m^2 Inercia del brazo rotatorio
     m_p = 0.024  # Kg Masa del pendulo
     l = 0.129  # m mitad del largo del pendulo, distancia del extremo al centro de masa
-    j_p = 1.331e-4  # Kg.m^2 Inercia del pendulo
+    j_p = 0.000532  # 1.331e-4  # Kg.m^2 Inercia del pendulo
     g = -9.81  # m/s^2 Aceleracion de la gravedad
 
     # Ecuaciones dinamicas
@@ -56,9 +56,9 @@ l = 0.129  # m mitad del largo del pendulo, distancia del extremo al centro de m
 # Condiciones iniciales
 Ts = 0.002  # segundos
 T = 10  # Tiempo de simulacion
-X0 = [np.deg2rad(30), 0.0, 0.0, 0.0]  # [theta, theta_dot, phi, phi_dot]
+X0 = [np.deg2rad(60), 0.5, 0.0, 1.0]  # [theta, theta_dot, phi, phi_dot]
 t = np.arange(0, T + Ts, Ts)  # vector de tiempo (inicio, fin, paso)
-tau = 0.001  # torque constante aplicado al brazo rotatorio
+tau = 0.001  # torque constante aplicado al brazo rotatorio # usar torques chicos
 
 sol = odeint(model, X0, t, args=(tau,))  # resolver ODE
 # print(sol.shape)
@@ -82,43 +82,43 @@ plt.tight_layout()
 plt.show()
 
 # Animacion del sistema
-fig2, ax2 = plt.subplots(figsize=(6, 6))
-ax2.set_xlim(-(r + 0.3), r + 0.3)
-ax2.set_ylim(-(r + 0.3), r + 0.3)
-ax2.set_aspect("equal")
-ax2.grid()
-(brazo_line,) = ax2.plot([], [], "o-", lw=4, color="blue", label="Brazo")
-(pendulo_line,) = ax2.plot([], [], "o-", lw=2, color="red", label="Péndulo")
-ax2.legend()
+# fig2, ax2 = plt.subplots(figsize=(6, 6))
+# ax2.set_xlim(-(r + 0.3), r + 0.3)
+# ax2.set_ylim(-(r + 0.3), r + 0.3)
+# ax2.set_aspect("equal")
+# ax2.grid()
+# (brazo_line,) = ax2.plot([], [], "o-", lw=4, color="blue", label="Brazo")
+# (pendulo_line,) = ax2.plot([], [], "o-", lw=2, color="red", label="Péndulo")
+# ax2.legend()
 
 
-def init():
-    brazo_line.set_data([], [])
-    pendulo_line.set_data([], [])
-    return brazo_line, pendulo_line
+# def init():
+#     brazo_line.set_data([], [])
+#     pendulo_line.set_data([], [])
+#     return brazo_line, pendulo_line
 
 
-# Para submuestrear
-paso = 3
-indices = np.arange(0, len(t), paso)
+# # Para submuestrear
+# paso = 3
+# indices = np.arange(0, len(t), paso)
 
 
-def animate(i):
-    idx = indices[i]
-    # Posición del extremo del brazo
-    x_brazo = r * np.cos(sol[idx, 0])
-    y_brazo = r * np.sin(sol[idx, 0])
-    # Posición del extremo del péndulo
-    x_pendulo = x_brazo + l * np.sin(sol[idx, 2]) * np.cos(sol[idx, 0])
-    y_pendulo = y_brazo - l * np.cos(sol[idx, 2])
-    # Brazo: desde el origen al extremo
-    brazo_line.set_data([0, x_brazo], [0, y_brazo])
-    # Péndulo: desde extremo del brazo al extremo del péndulo
-    pendulo_line.set_data([x_brazo, x_pendulo], [y_brazo, y_pendulo])
-    return brazo_line, pendulo_line
+# def animate(i):
+#     idx = indices[i]
+#     # Posición del extremo del brazo
+#     x_brazo = r * np.cos(sol[idx, 0])
+#     y_brazo = r * np.sin(sol[idx, 0])
+#     # Posición del extremo del péndulo
+#     x_pendulo = x_brazo + l * np.sin(sol[idx, 2]) * np.cos(sol[idx, 0])
+#     y_pendulo = y_brazo - l * np.cos(sol[idx, 2])
+#     # Brazo: desde el origen al extremo
+#     brazo_line.set_data([0, x_brazo], [0, y_brazo])
+#     # Péndulo: desde extremo del brazo al extremo del péndulo
+#     pendulo_line.set_data([x_brazo, x_pendulo], [y_brazo, y_pendulo])
+#     return brazo_line, pendulo_line
 
 
-ani = animation.FuncAnimation(
-    fig2, animate, init_func=init, frames=len(indices), interval=30, blit=True
-)
-plt.show()
+# ani = animation.FuncAnimation(
+#     fig2, animate, init_func=init, frames=len(indices), interval=30, blit=True
+# )
+# plt.show()
